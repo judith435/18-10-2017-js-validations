@@ -1,0 +1,60 @@
+<html>
+<head>
+
+</head>
+<body>
+
+<script>
+    'use strict'
+    var validations = {
+        minValue: 11,
+        maxValue: 60,
+        divider: 4,
+        min: function (num) {
+            return {
+                success: num > validations.minValue,
+                message: 'Not minValue'
+            }
+        },
+        max: function (num) {
+            return {
+                success:  num < validations.maxValue,
+                message: 'Not'
+            }
+        },
+        divideBy: function(num) {
+            return {
+                success:  num % validations.divider == 0,
+                message: 'Not didvide by' + validations.divider
+            }
+        },
+        isNonZero: function(num) {
+            return {
+                success: num !== 0,
+                message: 'Non zero'
+            };
+        },
+        validate: function*(num) {
+            for (let prop in validations) {
+                if (typeof validations[prop] === 'function' && prop !== 'validate')
+                    yield validations[prop](num);
+            }
+        }
+    }
+
+    var v = validations.validate(1);
+    
+    while (true) {
+        const res = v.next();
+         if (res.done)
+            break;
+        
+        if (!res.value.success)
+            console.log(res.value.message);
+       
+    }
+    
+
+</script>
+</body>
+</html>
